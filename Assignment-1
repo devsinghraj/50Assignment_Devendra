@@ -1,0 +1,91 @@
+1st ► VOTE pod ► Observe what happens both in frontEnd & in Unix
+Action and Observation-->
+
+[root@ip-172-31-32-161 k8s-specifications]# kubectl apply -f .
+deployment.apps/db created
+service/db created
+deployment.apps/redis created
+service/redis created
+deployment.apps/result created
+service/result created
+deployment.apps/vote created
+service/vote created
+deployment.apps/worker created
+
+[root@ip-172-31-32-161 k8s-specifications]# kubectl get po
+NAME                      READY   STATUS    RESTARTS   AGE
+db-b54cd94f4-nxlrn        1/1     Running   0          18s
+redis-868d64d78-6sc8w     1/1     Running   0          18s
+result-5d57b59f4b-tqkxt   1/1     Running   0          18s
+vote-94849dc97-2hg94      1/1     Running   0          17s
+worker-dd46d7584-75jjt    1/1     Running   0          17s
+[root@ip-172-31-32-161 k8s-specifications]# 
+
+[root@ip-172-31-32-161 k8s-specifications]# kubectl get svc
+NAME         TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+db           ClusterIP   10.108.130.6    <none>        5432/TCP         62s
+kubernetes   ClusterIP   10.96.0.1       <none>        443/TCP          3h44m
+redis        ClusterIP   10.101.98.88    <none>        6379/TCP         62s
+result       NodePort    10.106.199.37   <none>        5001:31001/TCP   61s
+vote         NodePort    10.96.44.110    <none>        5000:31000/TCP   61s
+[root@ip-172-31-32-161 k8s-specifications]# 
+
+[root@ip-172-31-32-161 k8s-specifications]# kubectl logs vote-94849dc97-2hg94
+[2023-07-18 15:36:49 +0000] [1] [INFO] Starting gunicorn 20.1.0
+[2023-07-18 15:36:49 +0000] [1] [INFO] Listening at: http://0.0.0.0:80 (1)
+[2023-07-18 15:36:49 +0000] [1] [INFO] Using worker: sync
+[2023-07-18 15:36:49 +0000] [7] [INFO] Booting worker with pid: 7
+[2023-07-18 15:36:49 +0000] [8] [INFO] Booting worker with pid: 8
+[2023-07-18 15:36:49 +0000] [9] [INFO] Booting worker with pid: 9
+[2023-07-18 15:36:49 +0000] [10] [INFO] Booting worker with pid: 10
+172.31.32.161 - - [18/Jul/2023:15:38:48 +0000] "GET / HTTP/1.1" 200 1293 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.82"
+172.31.32.161 - - [18/Jul/2023:15:38:48 +0000] "GET /static/stylesheets/style.css HTTP/1.1" 304 0 "http://54.151.169.135:31000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.82"
+[2023-07-18 15:39:00,854] INFO in app: Received vote for a
+[2023-07-18 15:39:00 +0000] [7] [INFO] Received vote for a
+172.31.32.161 - - [18/Jul/2023:15:39:00 +0000] "POST / HTTP/1.1" 200 1696 "http://54.151.169.135:31000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.82"
+172.31.32.161 - - [18/Jul/2023:15:39:00 +0000] "GET /static/stylesheets/style.css HTTP/1.1" 304 0 "http://54.151.169.135:31000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.82"
+172.31.32.161 - - [18/Jul/2023:15:39:26 +0000] "GET / HTTP/1.1" 200 1293 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
+172.31.32.161 - - [18/Jul/2023:15:39:27 +0000] "GET /static/stylesheets/style.css HTTP/1.1" 304 0 "http://54.151.169.135:31000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
+[2023-07-18 15:39:29,316] INFO in app: Received vote for b
+[2023-07-18 15:39:29 +0000] [9] [INFO] Received vote for b
+172.31.32.161 - - [18/Jul/2023:15:39:29 +0000] "POST / HTTP/1.1" 200 1696 "http://54.151.169.135:31000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
+172.31.32.161 - - [18/Jul/2023:15:39:29 +0000] "GET /static/stylesheets/style.css HTTP/1.1" 304 0 "http://54.151.169.135:31000/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
+
+
+[root@ip-172-31-32-161 k8s-specifications]# kubectl delete po vote-94849dc97-6cs26
+pod "vote-94849dc97-6cs26" deleted
+[root@ip-172-31-32-161 k8s-specifications]#
+
+[root@ip-172-31-32-161 k8s-specifications]# kubectl get po
+NAME                      READY   STATUS        RESTARTS   AGE
+db-b54cd94f4-nxlrn        1/1     Running       0          4m3s
+redis-868d64d78-6sc8w     1/1     Running       0          4m3s
+result-5d57b59f4b-tqkxt   1/1     Running       0          4m3s
+vote-94849dc97-2hg94      0/1     Terminating   0          4m2s
+vote-94849dc97-5mnms      1/1     Running       0          9s
+worker-dd46d7584-75jjt    1/1     Running       0          4m2s
+
+[root@ip-172-31-32-161 k8s-specifications]# kubectl get po
+NAME                      READY   STATUS    RESTARTS   AGE
+db-b54cd94f4-nxlrn        1/1     Running   0          4m29s
+redis-868d64d78-6sc8w     1/1     Running   0          4m29s
+result-5d57b59f4b-tqkxt   1/1     Running   0          4m29s
+vote-94849dc97-5mnms      1/1     Running   0          35s
+worker-dd46d7584-75jjt    1/1     Running   0          4m28s
+
+Observation--->
+
+1-old volte (vote-94849dc97-2hg94) pod get terminated and at a same time new volte pod (vote-94849dc97-5mnms) get created
+2-all old log of volte pod get deleted
+3-no impact on result pod and data store on db
+
+[root@ip-172-31-32-161 k8s-specifications]# kubectl logs vote-94849dc97-5mnms
+[2023-07-18 15:40:40 +0000] [1] [INFO] Starting gunicorn 20.1.0
+[2023-07-18 15:40:40 +0000] [1] [INFO] Listening at: http://0.0.0.0:80 (1)
+[2023-07-18 15:40:40 +0000] [1] [INFO] Using worker: sync
+[2023-07-18 15:40:40 +0000] [7] [INFO] Booting worker with pid: 7
+[2023-07-18 15:40:40 +0000] [8] [INFO] Booting worker with pid: 8
+[2023-07-18 15:40:40 +0000] [9] [INFO] Booting worker with pid: 9
+[2023-07-18 15:40:40 +0000] [10] [INFO] Booting worker with pid: 10
+[root@ip-172-31-32-161 k8s-specifications]#
+
