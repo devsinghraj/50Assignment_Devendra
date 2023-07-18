@@ -1,5 +1,11 @@
 1st ► VOTE pod ► Observe what happens both in frontEnd & in Unix
-Action and Observation-->
+
+Observation--->
+1-old volte (vote-94849dc97-2hg94) pod get terminated and at a same time new volte pod (vote-94849dc97-5mnms) get created
+2-all old log of volte pod get deleted
+3-no impact on result pod and data store on db
+
+Activity Logs--->>
 
 [root@ip-172-31-32-161 k8s-specifications]# kubectl apply -f .
 deployment.apps/db created
@@ -73,11 +79,6 @@ result-5d57b59f4b-tqkxt   1/1     Running   0          4m29s
 vote-94849dc97-5mnms      1/1     Running   0          35s
 worker-dd46d7584-75jjt    1/1     Running   0          4m28s
 
-Observation--->
-
-1-old volte (vote-94849dc97-2hg94) pod get terminated and at a same time new volte pod (vote-94849dc97-5mnms) get created
-2-all old log of volte pod get deleted
-3-no impact on result pod and data store on db
 
 [root@ip-172-31-32-161 k8s-specifications]# kubectl logs vote-94849dc97-5mnms
 [2023-07-18 15:40:40 +0000] [1] [INFO] Starting gunicorn 20.1.0
