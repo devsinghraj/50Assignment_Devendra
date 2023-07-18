@@ -1,4 +1,4 @@
-1st ► VOTE pod ► Observe what happens both in frontEnd & in Unix
+1st ► Delete VOTE pod ► Observe what happens both in frontEnd & in Unix
 
 Observation--->
 1-old volte (vote-94849dc97-2hg94) pod get terminated and at a same time new volte pod (vote-94849dc97-5mnms) get created
