@@ -1,7 +1,9 @@
 10. what happens after db pod deletion?
 Observation-
-After DB pod deletion Shocket connetion of Result and Worker pod get down.
-To restablish Shocket connetion again with db pod, Result and Worker pod get restarted.
+After DB pod deletion Shocket connetion with Result and Worker pod get down.
+So Worker pod will not be able to push the data to db pod and Result pod will not be able to pull the data from db pod.
+To restablish Shocket connetion again with db pod, Result and Worker pod get restarted and now Worker pod able to push date to db pod and result pod pull data from db pod now.
+Note-Worker and Result po name will not changed after restart.
 
 
 [root@ip-172-31-32-161 ~]# kubectl get po
@@ -14,4 +16,4 @@ worker-dd46d7584-vhxq2    1/1     Running   1          51m
 
 12. What you did in order to make the result pod work.
 
-There is no manual intervention for result pod to work again. It get Restarted to restablish connection again with new DB pod (Only when new DB pod come in 1/1 running state)
+There is no manual intervention for result pod to work again. It get auto Restarted to restablish connection again with new DB pod (Only when new DB pod come in 1/1 running state)
